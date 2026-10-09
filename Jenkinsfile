@@ -1,3 +1,4 @@
+```groovy
 pipeline {
     agent any
 
@@ -8,16 +9,26 @@ pipeline {
             }
         }
 
+        stage('Create Virtual Environment') {
+            steps {
+                sh '''
+                    python3 -m venv .venv
+                    .venv/bin/python -m pip install --upgrade pip
+                '''
+            }
+        }
+
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m pip install --user -r requirements.txt'
+                sh '.venv/bin/python -m pip install -r requirements.txt'
             }
         }
 
         stage('Run Python Code') {
             steps {
-                sh 'python3 extract.py'
+                sh '.venv/bin/python extract.py'
             }
         }
     }
 }
+```
